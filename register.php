@@ -1,16 +1,45 @@
 <?php
+function sanitizeFormPassword($inputText){
+  $inputText = strip_tags($inputText);
+  return $inputText;
+}
+
+function sanitizeFormUsername($inputText){
+  $inputText = strip_tags($inputText);
+  $inputText = str_replace(" ", "", $inputText);
+  return $inputText;
+}
+
+function sanitizeFormString($inputText){
+  $inputText = strip_tags($inputText);
+  $inputText = str_replace(" ", "", $inputText);
+  $inputText = ucfirst(strtolower($inputText));
+  return $inputText;
+}
+
 if(isset($_POST['loginButton'])){
   //echo "loginbutton was pressed";
-
 }
 
 if(isset($_POST['registerButton'])){
-  echo "registerButton was pressed";
+  //echo "registerButton was pressed";
+  $username = sanitizeFormUsername($_POST['username']);
+
+  $firstName = sanitizeFormString($_POST['firstName']);
+
+  $lastName = sanitizeFormString($_POST['lastName']);
+
+  $email = sanitizeFormString($_POST['email']);
   
+  $email2 = sanitizeFormString($_POST['email2']);
+
+  $password =sanitizeFormPassword($_POST['password']);
+
+  $password2=sanitizeFormPassword($_POST['password2']);
+
+  //echo "username";
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,11 +54,11 @@ if(isset($_POST['registerButton'])){
     <form id="loginForm" action="register.php" method="POST">
       <h2>Login to your account</h2>
       <p>
-        <label for="Username">Username</label>
+        <label for="loginUsername">Username</label>
         <input id="loginUsername" name="loginUsername" type="text" placeholder="username" required>
       </p>
       <p>
-        <label for="Password">Password</label>
+        <label for="loginPassword">Password</label>
         <input id="loginPassword" name="loginPassword" type="Password" placeholder="YUOR Password"  required>
       </p>
       <button type="submit" name="loginButton">LOG IN</button>
