@@ -7,6 +7,7 @@
   <title>Welcome to Slotify!</title>
 </head>
 <body>
-  
+  Welcome to register.php
+
 </body>
 </html>
