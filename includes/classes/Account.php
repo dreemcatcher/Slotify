@@ -1,9 +1,11 @@
 <?php
 class Account
 {
+	private $con;
 	private $errorArray;
 	
-	public function __construct(){
+	public function __construct($con){
+		$this->con=$con;
 		$this->errorArray=array();
 	}
 
@@ -16,7 +18,7 @@ class Account
 
 	  if(empty($this->errorArray) == true){
 	  		// INSERT into DB
-	  	return true;
+	  	return $this->insertUserDetails($un, $fn, $ln, $em, $pw);
 	  }else{
 	  	return false;
 	  }
@@ -30,12 +32,25 @@ class Account
 		return "<span class='errorMessage'>$error</span>";
 	}
 
+	private function insertUserDetails ($un, $fn, $ln, $em, $pw){
+		$encryptedPw = md5($pw);  // Password 
+		$profilePic = "assets/images/profile-pics/default-profile-pic.jpg";
+		$date = date("Y-m-d");
+		//echo "INSERT INTO users VALUES(NULL, '$un','$fn','$ln','$em','$encryptedPw','$date','$profilePic')";
+		$result = mysqli_query($this->con, "INSERT INTO users VALUES(NULL, '$un','$fn','$ln','$em','$encryptedPw','$date','$profilePic')");
+		return $result;
+	}
+
 	private function validateUsername($un){
 		if(strlen($un)>25 || strlen($un) < 4){
 			array_push($this->errorArray, Constants::$usernameCharacters);
 			return;
 		}
 
+		$checkUsernameQuery = mysqli_query($this->con, "SELECT username FROM users WHERE username = '$un'");
+		if(mysqli_num_rows($checkUsernameQuery) !=0 ){
+			array_push($this->errorArray, Constants::$usernameTaken);
+		}
 		//TODO: check if username exist 
 
 	}
@@ -64,6 +79,13 @@ class Account
 			array_push($this->errorArray, Constants::$emailInvalid);
 			return;
 		}
+
+
+		$checkEmailQuery = mysqli_query($this->con, "SELECT email FROM users WHERE email = '$em'");
+		if(mysqli_num_rows($checkEmailQuery) !=0 ){
+			array_push($this->errorArray, Constants::$emailTaken);
+		}
+		//TODO: check if username exist 
 
 		//TODO: check that email hasnt already in use
 
